@@ -25,8 +25,14 @@ public class MainUi implements ToolWindowFactory {
     //缓存文件页数所对应的seek，以免每次跳页后重新读取文件
     Map<Integer, Long> seekDictionary = new LinkedHashMap<>();
 
+    private int cacheInterval = 500;
+
     // 文件路径
     private String bookFile = persistentState.getBookPathText();
+
+    private String type = persistentState.getFontType();
+
+    private String size = persistentState.getFontSize();
 
     JTextArea textArea;
 
@@ -54,11 +60,12 @@ public class MainUi implements ToolWindowFactory {
                 currentLine = Integer.parseInt(persistentState.getCurrentLine());
             }
 
-            // 查询当前行数seek值
-            this.countSeek();
 
             //查询总行数
             totalLine = countLine();
+
+            // 查询当前行数seek值
+            this.countSeek();
 
             panel = new JPanel();
 
@@ -66,11 +73,12 @@ public class MainUi implements ToolWindowFactory {
             textArea.append("");
             textArea.setOpaque(false);
             textArea.setRows(1);
-            textArea.setColumns(130);
+            textArea.setColumns(50);
             textArea.setTabSize(14);
             textArea.setEditable(false);
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
+            textArea.setFont(new Font(type, Font.PLAIN, Integer.parseInt(size)));
 
 
             panel.add(textArea, BorderLayout.WEST);
@@ -87,7 +95,6 @@ public class MainUi implements ToolWindowFactory {
                         try {
                             String input = current.getText();
                             String inputCurrent = input.split("/")[0].trim();
-                            System.out.println(inputCurrent);
 
                             int i = Integer.parseInt(inputCurrent);
                             if (i <= 1) {
@@ -120,12 +127,15 @@ public class MainUi implements ToolWindowFactory {
                     persistentState = PersistentState.getInstanceForce();
                     seekDictionary.clear();
                     bookFile = persistentState.getBookPathText();
+                    type = persistentState.getFontType();
+                    size = persistentState.getFontSize();
                     totalLine = countLine();
                     currentLine = 0;
                     seek = 0;
                     textArea.setText("已刷新");
                     current.setText(" " + currentLine);
                     total.setText("/" + totalLine);
+                    textArea.setFont(new Font(type, Font.PLAIN, Integer.parseInt(size)));
                 } catch (Exception newE) {
                     newE.printStackTrace();
                 }
@@ -227,8 +237,12 @@ public class MainUi implements ToolWindowFactory {
         try {
             ra = new RandomAccessFile(bookFile, "r");
             int i = 0;
+            seekDictionary.put(0,ra.getFilePointer());
             while (ra.readLine() != null) {
                 i++;
+                if (i % cacheInterval == 0) {
+                    seekDictionary.put(i, ra.getFilePointer());
+                }
             }
 
             return i;
@@ -254,14 +268,17 @@ public class MainUi implements ToolWindowFactory {
 
         RandomAccessFile ra = null;
 
-        int line = 0;
         try {
             if (seekDictionary.containsKey(currentLine)) {
                 this.seek = seekDictionary.get(currentLine);
             }
             else {
                 ra = new RandomAccessFile(bookFile, "r");
-
+                int line = 0;
+                for (int i = 0; cacheInterval * i < currentLine; i ++){
+                    line = cacheInterval * i;
+                    ra.seek(seekDictionary.get(line));
+                }
                 while (ra.readLine() != null) {
                     line++;
                     if (line == currentLine) {
@@ -269,7 +286,6 @@ public class MainUi implements ToolWindowFactory {
                         break;
                     }
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();

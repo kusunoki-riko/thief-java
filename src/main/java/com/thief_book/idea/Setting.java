@@ -1,10 +1,8 @@
 package com.thief_book.idea;
 
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.thief_book.idea.ui.SettingUi;
-import com.thief_book.idea.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -68,28 +66,26 @@ public class Setting implements SearchableConfigurable {
     @Override
     public boolean isModified() {
         return !StringUtils.equals(persistentState.getBookPathText(), settingUi.bookPathText.getText())
-                || !StringUtils.equals(persistentState.getShowFlag(), settingUi.showFlag.isSelected() ? "1" : "0")
-                || !StringUtils.equals(persistentState.getAutoNextSecond(), settingUi.autoNextSecond.getSelectedItem().toString())
+                || !StringUtils.equals(persistentState.getFontSize(), settingUi.fontSize.getSelectedItem().toString())
                 || !StringUtils.equals(persistentState.getBefore(), settingUi.before.getText())
                 || !StringUtils.equals(persistentState.getNext(), settingUi.next.getText())
-                || !StringUtils.equals(persistentState.getAutoKeymap(), settingUi.autoKeymap.getText());
+                || !StringUtils.equals(persistentState.getFontType(), settingUi.fontType.getSelectedItem().toString());
     }
 
     @Override
     public void apply() {
         persistentState.setBookPathText(settingUi.bookPathText.getText());
-        persistentState.setShowFlag(settingUi.showFlag.isSelected() ? "1" : "0");
-        persistentState.setAutoNextSecond(settingUi.autoNextSecond.getSelectedItem().toString());
+        persistentState.setFontSize(settingUi.fontSize.getSelectedItem().toString());
         persistentState.setBefore(settingUi.before.getText());
         persistentState.setNext(settingUi.next.getText());
-        persistentState.setAutoKeymap(settingUi.autoKeymap.getText());
+        persistentState.setFontType(settingUi.fontType.getSelectedItem().toString());
     }
 
     @Override
     public void reset() {
 //        settingUi.bookPathText.setText("");
 //        settingUi.showFlag.setSelected(false);
-//        settingUi.autoNextSecond.setSelectedItem("5");
+//        settingUi.fontSize.setSelectedItem("5");
 //        settingUi.before.setText("");
 //        settingUi.next.setText("");
     }
