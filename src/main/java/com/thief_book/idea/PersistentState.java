@@ -34,6 +34,10 @@ public class PersistentState implements PersistentStateComponent<Element> {
 
     private String currentLine;
 
+    private String lineCount;
+
+
+
     public PersistentState() {
     }
 
@@ -60,6 +64,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
         element.setAttribute("next", this.getNext());
         element.setAttribute("currentLine", this.getCurrentLine());
         element.setAttribute("fontType", this.getFontType());
+        element.setAttribute("lineCount",this.getLineCount());
         return element;
     }
 
@@ -72,6 +77,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
         this.setNext(state.getAttributeValue("next"));
         this.setCurrentLine(state.getAttributeValue("currentLine"));
         this.setFontType(state.getAttributeValue("fontType"));
+        this.setLineCount(state.getAttributeValue("lineCount"));
     }
 
     @Override
@@ -133,5 +139,12 @@ public class PersistentState implements PersistentStateComponent<Element> {
 
     public void setFontType(String fontType) {
         this.fontType = fontType;
+    }
+    public String getLineCount() {
+        return this.lineCount =StringUtils.isEmpty(lineCount) ? "1" : lineCount;
+    }
+
+    public void setLineCount(String lineCount) {
+        this.lineCount = lineCount;
     }
 }

@@ -69,7 +69,9 @@ public class Setting implements SearchableConfigurable {
                 || !StringUtils.equals(persistentState.getFontSize(), settingUi.fontSize.getSelectedItem().toString())
                 || !StringUtils.equals(persistentState.getBefore(), settingUi.before.getText())
                 || !StringUtils.equals(persistentState.getNext(), settingUi.next.getText())
+                || !StringUtils.equals(persistentState.getLineCount(), settingUi.lineCount.getSelectedItem().toString())
                 || !StringUtils.equals(persistentState.getFontType(), settingUi.fontType.getSelectedItem().toString());
+
     }
 
     @Override
@@ -78,7 +80,10 @@ public class Setting implements SearchableConfigurable {
         persistentState.setFontSize(settingUi.fontSize.getSelectedItem().toString());
         persistentState.setBefore(settingUi.before.getText());
         persistentState.setNext(settingUi.next.getText());
+        persistentState.setLineCount(settingUi.lineCount.getSelectedItem().toString());
         persistentState.setFontType(settingUi.fontType.getSelectedItem().toString());
+        persistentState.setFontType(settingUi.lineCount.getSelectedItem().toString());
+
     }
 
     @Override

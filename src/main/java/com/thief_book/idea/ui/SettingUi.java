@@ -37,6 +37,8 @@ public class SettingUi {
     public JTextField bookPathText;
     public JLabel l;
     public JLabel fontSizeLabel;
+	public JLabel label6;
+    public JComboBox lineCount;
 
 
     public SettingUi() {
@@ -51,9 +53,11 @@ public class SettingUi {
             }
         });
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
+
         for (int i = 11; i < 25; i ++) {
             defaultComboBoxModel1.addElement(i + "");
         }
+
         fontSize.setModel(defaultComboBoxModel1);
         fontSize.setToolTipText("");
         final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
@@ -62,7 +66,15 @@ public class SettingUi {
         }
         fontType.setModel(defaultComboBoxModel2);
         fontType.setToolTipText("");
+
+        final DefaultComboBoxModel defaultComboBoxModel3 = new DefaultComboBoxModel();
+        for (int i = 1; i < 11; i ++) {
+            defaultComboBoxModel3.addElement(i + "");
+        }
+        lineCount.setModel(defaultComboBoxModel3);
+        lineCount.setToolTipText("");
     }
+
 
 
     public void innit(PersistentState persistentState) {
@@ -74,6 +86,7 @@ public class SettingUi {
         fontType.setSelectedItem(persistentState.getFontType());
         before.setText(persistentState.getBefore());
         next.setText(persistentState.getNext());
+        lineCount.setSelectedItem(Integer.parseInt(persistentState.getLineCount()));
 
         before.setEditable(false);
         next.setEditable(false);
