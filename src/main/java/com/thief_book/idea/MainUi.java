@@ -55,18 +55,6 @@ public class MainUi implements ToolWindowFactory {
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
 
         try {
-            // 初始化当前行数
-            if (StringUtils.isNotEmpty(persistentState.getCurrentLine())) {
-                currentLine = Integer.parseInt(persistentState.getCurrentLine());
-            }
-
-
-            //查询总行数
-            totalLine = countLine();
-
-            // 查询当前行数seek值
-            this.countSeek();
-
             panel = new JPanel();
 
             textArea = new JTextArea();
@@ -126,12 +114,22 @@ public class MainUi implements ToolWindowFactory {
                 try {
                     persistentState = PersistentState.getInstanceForce();
                     seekDictionary.clear();
-                    bookFile = persistentState.getBookPathText();
+                    if (!bookFile.equals(persistentState.getBookPathText())) {
+                        bookFile = persistentState.getBookPathText();
+                        currentLine = 0;
+                        seek = 0;
+                    }
+                    else  {
+                        // 初始化当前行数
+                        if (StringUtils.isNotEmpty(persistentState.getCurrentLine())) {
+                            currentLine = Integer.parseInt(persistentState.getCurrentLine());
+                        }
+                    }
+                    totalLine = countLine();
+                    countSeek();
                     type = persistentState.getFontType();
                     size = persistentState.getFontSize();
-                    totalLine = countLine();
-                    currentLine = 0;
-                    seek = 0;
+
                     textArea.setText("已刷新");
                     current.setText(" " + currentLine);
                     total.setText("/" + totalLine);
@@ -145,6 +143,9 @@ public class MainUi implements ToolWindowFactory {
             //上一页
             JButton afterB = new JButton("上页");
             afterB.addActionListener(e -> {
+                if (currentLine > totalLine) {
+                    return;
+                }
                 if (currentLine > 1) {
                     currentLine = currentLine - 2;
                     try {
@@ -190,12 +191,6 @@ public class MainUi implements ToolWindowFactory {
             // 界面加载完先设置标语
             textArea.setText(welcome);
 
-            if ("1".equals(persistentState.getShowFlag())) {
-//                action.hide();
-                afterB.hide();
-                nextB.hide();
-            }
-
             ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
             Content content = contentFactory.createContent(panel, "Control", false);
             toolWindow.getContentManager().addContent(content);
@@ -219,7 +214,9 @@ public class MainUi implements ToolWindowFactory {
             //实例化当前行数
             persistentState.setCurrentLine(String.valueOf(currentLine));
             seek = ra.getFilePointer();
-            seekDictionary.put(currentLine, seek);
+            if (currentLine % cacheInterval == 0) {
+                seekDictionary.put(currentLine, seek);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -254,14 +251,6 @@ public class MainUi implements ToolWindowFactory {
             ra.close();
         }
     }
-
-//    @Override
-//    public void keyPressed(KeyEvent keyEvent) {
-//        //行数跳转
-//        if (keyEvent.getSource() == current) {
-//
-//        }
-//    }
 
 
     public void countSeek() throws IOException {
