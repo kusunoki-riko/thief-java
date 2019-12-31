@@ -77,7 +77,7 @@ public class SettingUi {
         lineCount.setToolTipText("");
 
         final DefaultComboBoxModel defaultComboBoxModel4 = new DefaultComboBoxModel();
-        for (int i = 1; i < 4; i ++) {
+        for (int i = 0; i < 3; i ++) {
             defaultComboBoxModel4.addElement(i + "");
         }
         lineSpace.setModel(defaultComboBoxModel4);

@@ -153,7 +153,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
     }
 
     public String getLineSpace() {
-        return this.lineSpace=StringUtils.isEmpty(lineSpace) ? "1" : lineSpace;
+        return this.lineSpace=StringUtils.isEmpty(lineSpace) ? "0" : lineSpace;
     }
 
     public void setLineSpace(String lineSpace) {

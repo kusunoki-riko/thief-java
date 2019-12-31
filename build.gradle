@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.thief.idea'
-version '1.0-SNAPSHOT'
+version '2.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
