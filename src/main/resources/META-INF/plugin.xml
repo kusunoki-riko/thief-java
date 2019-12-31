@@ -12,7 +12,7 @@
     <extensions defaultExtensionNs="com.intellij">
 
         <!--canCloseContents 允许用户关闭-->
-        <toolWindow id="thief-book" anchor="bottom" canCloseContents="true"
+        <toolWindow id="maven" anchor="bottom" canCloseContents="true"
                     icon="/icons/thief.png" factoryClass="com.thief_book.idea.MainUi"/>
 
         <projectConfigurable groupId="tools" displayName="Thief-Book Config" id="thief.id"
@@ -25,7 +25,7 @@
 
 
          <!--Add your actions here -->
-        <action id="show-thief-book" class="com.thief_book.idea.ShowThiefBook" text="Show Thief" description="Show thief">
+        <action id="show-thief-book" class="com.thief_book.idea.ShowThiefBook" text="Show Maven" description="Show thief">
         <add-to-group group-id="WindowMenu" anchor="last"/>
         </action>
     </actions>
