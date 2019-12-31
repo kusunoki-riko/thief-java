@@ -36,6 +36,8 @@ public class PersistentState implements PersistentStateComponent<Element> {
 
     private String lineCount;
 
+    private String lineSpace;
+
 
 
     public PersistentState() {
@@ -143,8 +145,15 @@ public class PersistentState implements PersistentStateComponent<Element> {
     public String getLineCount() {
         return this.lineCount =StringUtils.isEmpty(lineCount) ? "1" : lineCount;
     }
-
     public void setLineCount(String lineCount) {
         this.lineCount = lineCount;
+    }
+
+    public String getLineSpace() {
+        return this.lineSpace=StringUtils.isEmpty(lineSpace) ? "1" : lineSpace;
+    }
+
+    public void setLineSpace(String lineSpace) {
+        this.lineSpace = lineSpace;
     }
 }

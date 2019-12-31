@@ -39,6 +39,8 @@ public class SettingUi {
     public JLabel fontSizeLabel;
 	public JLabel label6;
     public JComboBox lineCount;
+    public JComboBox lineSpace;
+    public JLabel label7;
 
 
     public SettingUi() {
@@ -73,6 +75,13 @@ public class SettingUi {
         }
         lineCount.setModel(defaultComboBoxModel3);
         lineCount.setToolTipText("");
+
+        final DefaultComboBoxModel defaultComboBoxModel4 = new DefaultComboBoxModel();
+        for (int i = 1; i < 4; i ++) {
+            defaultComboBoxModel4.addElement(i + "");
+        }
+        lineSpace.setModel(defaultComboBoxModel4);
+        lineSpace.setToolTipText("");
     }
 
 
@@ -86,7 +95,8 @@ public class SettingUi {
         fontType.setSelectedItem(persistentState.getFontType());
         before.setText(persistentState.getBefore());
         next.setText(persistentState.getNext());
-        lineCount.setSelectedItem(Integer.parseInt(persistentState.getLineCount()));
+        lineCount.setSelectedItem(persistentState.getLineCount());
+        lineSpace.setSelectedItem(persistentState.getLineSpace());
 
         before.setEditable(false);
         next.setEditable(false);
