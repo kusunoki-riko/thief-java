@@ -94,19 +94,23 @@ public class MainUi implements ToolWindowFactory {
                         try {
                             String input = current.getText();
                             String inputCurrent = input.split("/")[0].trim();
-
                             int i = Integer.parseInt(inputCurrent);
                             if (i <= 1) {
                                 seek = 0;
                                 currentLine = 0;
                             } else {
                                 currentLine =(i - 1) * lineCount;
+                                if (currentLine > totalLine) {
+                                    currentLine = totalLine;
+                                }
                                 countSeek();
                             }
                             textArea.setText(readBook());
                         } catch (IOException e1) {
                             e1.printStackTrace();
                             textArea.setText(e1.toString());
+                        } catch (NumberFormatException e2) {
+                            textArea.setText("请输入数字");
                         }
 
                     }
