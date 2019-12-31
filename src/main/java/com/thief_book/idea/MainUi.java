@@ -25,7 +25,7 @@ public class MainUi implements ToolWindowFactory {
     //缓存文件页数所对应的seek，以免每次跳页后重新读取文件
     Map<Integer, Long> seekDictionary = new LinkedHashMap<>();
 
-    private int cacheInterval = 500;
+    private int cacheInterval = 200;
 
     // 文件路径
     private String bookFile = persistentState.getBookPathText();
@@ -77,7 +77,7 @@ public class MainUi implements ToolWindowFactory {
             JPanel panelRight = new JPanel();
             // 当前行
             current = new JTextField("current line:");
-            current.setText(currentLine/lineCount.intValue() + "");
+            current.setText(currentLine/ lineCount + "");
             current.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent e) {
@@ -92,7 +92,7 @@ public class MainUi implements ToolWindowFactory {
                                 seek = 0;
                                 currentLine = 0;
                             } else {
-                                currentLine =(i - 1) * lineCount.intValue();
+                                currentLine =(i - 1) * lineCount;
                                 countSeek();
                             }
                             textArea.setText(readBook());
@@ -106,7 +106,7 @@ public class MainUi implements ToolWindowFactory {
             });
 
             // 总行数
-            total.setText("/" + totalLine/lineCount.intValue());
+            total.setText("/" + (totalLine%lineCount == 0 ? totalLine/lineCount : totalLine/lineCount + 1));
 
             panelRight.add(current, BorderLayout.EAST);
             panelRight.add(total, BorderLayout.EAST);
@@ -116,11 +116,12 @@ public class MainUi implements ToolWindowFactory {
             refresh.addActionListener(e -> {
                 try {
                     persistentState = PersistentState.getInstanceForce();
-                    seekDictionary.clear();
+
                     if (StringUtils.isEmpty(persistentState.getBookPathText())||!bookFile.equals(persistentState.getBookPathText())) {
                         bookFile = persistentState.getBookPathText();
                         currentLine = 0;
                         seek = 0;
+                        seekDictionary.clear();
                         totalLine = countLine();
                         countSeek();
                     }
@@ -128,7 +129,6 @@ public class MainUi implements ToolWindowFactory {
                         // 初始化当前行数
                         if (StringUtils.isNotEmpty(persistentState.getCurrentLine())) {
                             currentLine = Integer.parseInt(persistentState.getCurrentLine());
-
                         }
                         if (seekDictionary.size() <= 5 || totalLine == 0) {
                             totalLine = countLine();
@@ -140,10 +140,9 @@ public class MainUi implements ToolWindowFactory {
                     size = persistentState.getFontSize();
                     lineCount = Integer.parseInt(persistentState.getLineCount());
                     lineSpace =Integer.parseInt(persistentState.getLineSpace());
-
                     textArea.setText("已刷新");
-                    current.setText(" " + currentLine/lineCount.intValue());
-                    total.setText("/" + totalLine/lineCount.intValue());
+                    current.setText(" " + currentLine/lineCount);
+                    total.setText("/" + (totalLine%lineCount == 0 ? totalLine/lineCount : totalLine/lineCount + 1));
                     textArea.setFont(new Font(type, Font.PLAIN, Integer.parseInt(size)));
                 } catch (Exception newE) {
                     newE.printStackTrace();
@@ -157,13 +156,20 @@ public class MainUi implements ToolWindowFactory {
                 if (currentLine > totalLine) {
                     return;
                 }
-                if (currentLine/lineCount.intValue() > 1) {
-                    currentLine = currentLine -lineCount*2;
+                if (currentLine/lineCount > 1) {
+                    if (currentLine % lineCount == 0) {
+                        currentLine = currentLine - lineCount * 2;
+                    }
+                    else {
+                        while (currentLine % lineCount != 0) {
+                            currentLine --;
+                        }
+                        currentLine -= lineCount;
+                    }
                     try {
                         countSeek();
                         textArea.setText(readBook());
-                        current.setText(" " + currentLine/lineCount.intValue());
-                        total.setText("/" + totalLine/lineCount.intValue());
+                        current.setText(" " + currentLine/lineCount);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -180,12 +186,11 @@ public class MainUi implements ToolWindowFactory {
 
                 if (currentLine < totalLine) {
                     try {
-                        if (currentLine/lineCount.intValue() <= 1) {
+                        if (currentLine/lineCount <= 1) {
                             countSeek();
                         }
                         textArea.setText(readBook());
-                        current.setText(" " + currentLine/lineCount.intValue());
-                        total.setText("/" + totalLine/lineCount.intValue());
+                        current.setText(" " + (currentLine%lineCount == 0 ? currentLine / lineCount : currentLine / lineCount + 1) );
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -193,8 +198,8 @@ public class MainUi implements ToolWindowFactory {
 
             });
 
-            afterB.registerKeyboardAction(afterB.getActionListeners()[0], KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.ALT_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW);
-            nextB.registerKeyboardAction(nextB.getActionListeners()[0], KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.ALT_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW);
+            afterB.registerKeyboardAction(afterB.getActionListeners()[0], KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.ALT_DOWN_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW);
+            nextB.registerKeyboardAction(nextB.getActionListeners()[0], KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW);
 
             panelRight.add(nextB, BorderLayout.EAST);
             panel.add(panelRight, BorderLayout.EAST);
@@ -224,12 +229,11 @@ public class MainUi implements ToolWindowFactory {
             for (Integer j = 0; j < lineSpace; j++) {
                 nStr+="\n";
             }
-            for (Integer i = 0; i < lineCount; i++) {
-                str+= new String(ra.readLine().getBytes("ISO-8859-1"), "gbk")+nStr;
-
+            String temp;
+            for (Integer i = 0; i < lineCount &&  (temp = ra.readLine()) != null; i++) {
+                str+= new String(temp.getBytes("ISO-8859-1"), "gbk")+nStr;
+                currentLine ++;
             }
-
-            currentLine+=lineCount;
             //实例化当前行数
             persistentState.setCurrentLine(String.valueOf(currentLine));
             seek = ra.getFilePointer();
