@@ -67,6 +67,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
         element.setAttribute("currentLine", this.getCurrentLine());
         element.setAttribute("fontType", this.getFontType());
         element.setAttribute("lineCount",this.getLineCount());
+        element.setAttribute("lineSpace",this.getLineSpace());
         return element;
     }
 
@@ -80,6 +81,8 @@ public class PersistentState implements PersistentStateComponent<Element> {
         this.setCurrentLine(state.getAttributeValue("currentLine"));
         this.setFontType(state.getAttributeValue("fontType"));
         this.setLineCount(state.getAttributeValue("lineCount"));
+        this.setLineSpace(state.getAttributeValue("lineSpace"));
+
     }
 
     @Override

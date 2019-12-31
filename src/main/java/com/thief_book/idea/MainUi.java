@@ -35,6 +35,7 @@ public class MainUi implements ToolWindowFactory {
     private String size = persistentState.getFontSize();
 
     private Integer lineCount= Integer.parseInt(persistentState.getLineCount());
+
     private Integer lineSpace= Integer.parseInt(persistentState.getLineSpace());
 
     JTextArea textArea;
