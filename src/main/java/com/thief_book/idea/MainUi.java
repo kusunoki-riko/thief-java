@@ -5,10 +5,12 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import com.intellij.util.ui.JBUI;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -64,20 +66,25 @@ public class MainUi implements ToolWindowFactory {
             textArea = new JTextArea();
             textArea.append("");
             textArea.setOpaque(false);
-            textArea.setRows(1);
-            textArea.setColumns(50);
             textArea.setTabSize(14);
             textArea.setEditable(false);
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
             textArea.setFont(new Font(type, Font.PLAIN, Integer.parseInt(size)));
+            textArea.setBorder(JBUI.Borders.empty(0, 30));
 
 
-            panel.add(textArea, BorderLayout.WEST);
+            panel.setLayout(new BorderLayout());
+            panel.add(textArea, BorderLayout.CENTER);
 
             JPanel panelRight = new JPanel();
+            panelRight.setBorder(JBUI.Borders.empty(0,20));
+            panelRight.setPreferredSize(new Dimension(280,30));
             // 当前行
             current = new JTextField("current line:");
+            current.setPreferredSize(new Dimension(50,30));
+            current.setOpaque(false);
+            current.setBorder(JBUI.Borders.empty(0));
             current.setText(currentLine/ lineCount + "");
             current.addKeyListener(new KeyAdapter() {
                 @Override
@@ -108,12 +115,14 @@ public class MainUi implements ToolWindowFactory {
 
             // 总行数
             total.setText("/" + (totalLine%lineCount == 0 ? totalLine/lineCount : totalLine/lineCount + 1));
-
             panelRight.add(current, BorderLayout.EAST);
             panelRight.add(total, BorderLayout.EAST);
 
             //重新加载设置
-            JButton refresh = new JButton("刷新");
+            JButton refresh = new JButton("〄");
+            refresh.setPreferredSize(new Dimension(20,20));
+            refresh.setContentAreaFilled(false);
+            refresh.setBorderPainted(false);
             refresh.addActionListener(e -> {
                 try {
                     persistentState = PersistentState.getInstanceForce();
@@ -136,7 +145,7 @@ public class MainUi implements ToolWindowFactory {
                             countSeek();
                         }
                     }
-
+                    panel.setLayout(new BorderLayout());
                     type = persistentState.getFontType();
                     size = persistentState.getFontSize();
                     lineCount = Integer.parseInt(persistentState.getLineCount());
@@ -152,7 +161,10 @@ public class MainUi implements ToolWindowFactory {
             panelRight.add(refresh, BorderLayout.EAST);
 
             //上一页
-            JButton afterB = new JButton("上页");
+            JButton afterB = new JButton("△");
+            afterB.setPreferredSize(new Dimension(20,20));
+            afterB.setContentAreaFilled(false);
+            afterB.setBorderPainted(false);
             afterB.addActionListener(e -> {
                 if (currentLine > totalLine) {
                     return;
@@ -181,7 +193,10 @@ public class MainUi implements ToolWindowFactory {
             panelRight.add(afterB, BorderLayout.EAST);
 
             //下一页
-            JButton nextB = new JButton("下页");
+            JButton nextB = new JButton("▽");
+            nextB.setPreferredSize(new Dimension(20,20));
+            nextB.setContentAreaFilled(false);
+            nextB.setBorderPainted(false);
 
             nextB.addActionListener(e -> {
 
