@@ -214,6 +214,10 @@ public class MainUi implements ToolWindowFactory {
                     currentPage = 0;
                     seek = 0;
                     seekDictionary.clear();
+                    if (StringUtils.isEmpty(bookFile)) {
+                        totalLine = 0;
+                        return;
+                    }
                     totalLine = countLine();
                     countSeek();
                 } else {
@@ -320,7 +324,7 @@ public class MainUi implements ToolWindowFactory {
                 nStr.append("\n");
             }
             String temp;
-            for (Integer i = 0; i < lineCount && (temp = ra.readLine()) != null; i++) {
+            for (int i = 0; i < lineCount && (temp = ra.readLine()) != null; i++) {
                 str.append(new String(temp.getBytes(StandardCharsets.ISO_8859_1), "gbk")).append(nStr);
                 currentPage++;
             }
@@ -332,6 +336,7 @@ public class MainUi implements ToolWindowFactory {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return e.getMessage();
         } finally {
             if (ra != null) {
                 ra.close();
@@ -353,12 +358,11 @@ public class MainUi implements ToolWindowFactory {
                     seekDictionary.put(i, ra.getFilePointer());
                 }
             }
-
             return i;
 
         } catch (Exception e) {
             e.printStackTrace();
-            return Integer.MAX_VALUE;
+            return 0;
         }
     }
 
