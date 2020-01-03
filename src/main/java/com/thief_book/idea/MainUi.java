@@ -90,6 +90,11 @@ public class MainUi implements ToolWindowFactory {
      **/
     private int currentPage = 0;
 
+    /**
+     * 是否隐藏界面
+     **/
+    private boolean hide = false;
+
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         try {
@@ -104,7 +109,7 @@ public class MainUi implements ToolWindowFactory {
     }
 
     /**
-     * 初始化面板
+     * 初始化整体面板
      **/
     private JPanel initPanel() {
         JPanel panel = new JPanel();
@@ -116,7 +121,7 @@ public class MainUi implements ToolWindowFactory {
     }
 
     /**
-     * 初始化页面时，初始化正文区域
+     * 正文区域初始化
      **/
     private JTextArea initTextArea() {
         JTextArea textArea = new JTextArea();
@@ -134,7 +139,7 @@ public class MainUi implements ToolWindowFactory {
     }
 
     /**
-     * 初始化页面时，初始化操作面板
+     * 初始化操作面板
      **/
     private JPanel initOperationPanel() {
         // 当前行
@@ -148,16 +153,22 @@ public class MainUi implements ToolWindowFactory {
         panelRight.add(current, BorderLayout.EAST);
         panelRight.add(total, BorderLayout.EAST);
         //加载按钮
-        panelRight.add(initFreshButton(), BorderLayout.EAST);
+        JButton fresh = initFreshButton();
+        panelRight.add(fresh, BorderLayout.EAST);
         //上一页
-        panelRight.add(initUpButton(), BorderLayout.EAST);
+        JButton up = initUpButton();
+        panelRight.add(up, BorderLayout.EAST);
         //下一页
-        panelRight.add(initDownButton(), BorderLayout.EAST);
+        JButton down = initDownButton();
+        panelRight.add(down, BorderLayout.EAST);
+        //老板键
+        JButton boss = initBossButton(new JButton[] {fresh, up, down});
+        panelRight.add(boss, BorderLayout.SOUTH);
         return panelRight;
     }
 
     /**
-     * 初始化页面时，初始化跳页输入框
+     * 跳页输入框
      **/
     private JTextField initTextField() {
         JTextField current = new JTextField("current line:");
@@ -180,7 +191,7 @@ public class MainUi implements ToolWindowFactory {
                         } else {
                             currentPage = (i - 1) * lineCount;
                             if (currentPage > totalLine) {
-                                currentPage = totalLine;
+                                currentPage = totalLine - 1;
                             }
                             countSeek();
                         }
@@ -199,7 +210,7 @@ public class MainUi implements ToolWindowFactory {
     }
 
     /**
-     * 初始化页面时，生成按钮：刷新按钮
+     * 刷新按钮
      **/
     private JButton initFreshButton() {
         JButton refresh = new JButton("〄");
@@ -246,7 +257,7 @@ public class MainUi implements ToolWindowFactory {
     }
 
     /**
-     * 初始化页面时，生成按钮：向上翻页按钮
+     * 向上翻页按钮
      **/
     private JButton initUpButton() {
         JButton afterB = new JButton("△");
@@ -276,13 +287,13 @@ public class MainUi implements ToolWindowFactory {
             }
         });
         afterB.registerKeyboardAction(afterB.getActionListeners()[0]
-                , KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.ALT_DOWN_MASK)
+                , KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.CTRL_DOWN_MASK)
                 , JComponent.WHEN_IN_FOCUSED_WINDOW);
         return afterB;
     }
 
     /**
-     * 初始化页面时，生成按钮：向下翻页按钮
+     * 向下翻页按钮
      **/
     private JButton initDownButton() {
         JButton nextB = new JButton("▽");
@@ -305,9 +316,41 @@ public class MainUi implements ToolWindowFactory {
 
         });
         nextB.registerKeyboardAction(nextB.getActionListeners()[0]
-                , KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK)
+                , KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.CTRL_DOWN_MASK)
                 , JComponent.WHEN_IN_FOCUSED_WINDOW);
         return nextB;
+    }
+
+    /**
+     * 隐藏按钮
+     **/
+    private JButton initBossButton(JButton[] buttons) {
+        //老板键
+        JButton bossB = new JButton(" ");
+        bossB.setPreferredSize(new Dimension(5,5));
+        bossB.setContentAreaFilled(false);
+        bossB.setBorderPainted(false);
+        bossB.addActionListener(e -> {
+            if (hide) {
+                for (JButton b : buttons) {
+                    b.setVisible(true);
+                }
+                current.setVisible(true);
+                total.setVisible(true);
+                textArea.setText("Stopping memory leak detection....");
+                hide = false;
+            } else {
+                for (JButton b : buttons) {
+                    b.setVisible(false);
+                }
+                current.setVisible(false);
+                total.setVisible(false);
+                textArea.setText("Memory leak detection....");
+                hide = true;
+            }
+        });
+        bossB.registerKeyboardAction(bossB.getActionListeners()[0], KeyStroke.getKeyStroke('z'), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        return bossB;
     }
 
     /**
