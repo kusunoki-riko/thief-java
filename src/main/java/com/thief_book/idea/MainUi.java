@@ -91,6 +91,11 @@ public class MainUi implements ToolWindowFactory {
     private int currentPage = 0;
 
     /**
+     * 缓存文字
+     **/
+    private String temp = "Stopping memory leak detection....";
+
+    /**
      * 是否隐藏界面
      **/
     private boolean hide = false;
@@ -337,7 +342,7 @@ public class MainUi implements ToolWindowFactory {
                 }
                 current.setVisible(true);
                 total.setVisible(true);
-                textArea.setText("Stopping memory leak detection....");
+                textArea.setText(temp);
                 hide = false;
             } else {
                 for (JButton b : buttons) {
@@ -345,6 +350,7 @@ public class MainUi implements ToolWindowFactory {
                 }
                 current.setVisible(false);
                 total.setVisible(false);
+                temp = textArea.getText();
                 textArea.setText("Memory leak detection....");
                 hide = true;
             }
