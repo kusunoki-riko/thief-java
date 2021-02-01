@@ -1,12 +1,12 @@
 package com.thief_book.idea.ui;
 
+import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.thief_book.idea.PersistentState;
 import com.thief_book.idea.util.SettingUtil;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -27,9 +27,9 @@ public class SettingUi {
     public JLabel chooseFileLabel;
     public JLabel label1;
     public JButton button2;
-    public JLabel Label3;
-    public JComboBox fontSize;
-    public JComboBox fontType;
+    public JLabel label3;
+    public JComboBox<Integer> fontSize;
+    public JComboBox<String> fontType;
     public JLabel label5;
     public JLabel label4;
     public JTextField before;
@@ -38,47 +38,44 @@ public class SettingUi {
     public JLabel l;
     public JLabel fontSizeLabel;
 	public JLabel label6;
-    public JComboBox lineCount;
-    public JComboBox lineSpace;
+    public JComboBox<Integer> lineCount;
+    public JComboBox<Integer> lineSpace;
     public JLabel label7;
 
 
     public SettingUi() {
-        button2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                fileChooser.showOpenDialog(mainPanel);
-                File file = fileChooser.getSelectedFile();
-                bookPathText.setText( file.getPath());
-            }
+        button2.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.showOpenDialog(mainPanel);
+            File file = fileChooser.getSelectedFile();
+            bookPathText.setText( file.getPath());
         });
-        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
+        final DefaultComboBoxModel<Integer> defaultComboBoxModel1 = new DefaultComboBoxModel<>();
 
         for (int i = 11; i < 25; i ++) {
-            defaultComboBoxModel1.addElement(i + "");
+            defaultComboBoxModel1.addElement(i);
         }
 
         fontSize.setModel(defaultComboBoxModel1);
         fontSize.setToolTipText("");
-        final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
+        final DefaultComboBoxModel<String> defaultComboBoxModel2 = new DefaultComboBoxModel<>();
         for (String font : SettingUtil.getAllFontType()) {
             defaultComboBoxModel2.addElement(font);
         }
         fontType.setModel(defaultComboBoxModel2);
         fontType.setToolTipText("");
 
-        final DefaultComboBoxModel defaultComboBoxModel3 = new DefaultComboBoxModel();
+        final DefaultComboBoxModel<Integer> defaultComboBoxModel3 = new DefaultComboBoxModel<>();
         for (int i = 1; i < 11; i ++) {
-            defaultComboBoxModel3.addElement(i + "");
+            defaultComboBoxModel3.addElement(i);
         }
         lineCount.setModel(defaultComboBoxModel3);
         lineCount.setToolTipText("");
 
-        final DefaultComboBoxModel defaultComboBoxModel4 = new DefaultComboBoxModel();
+        final DefaultComboBoxModel<Integer> defaultComboBoxModel4 = new DefaultComboBoxModel<>();
         for (int i = 0; i < 3; i ++) {
-            defaultComboBoxModel4.addElement(i + "");
+            defaultComboBoxModel4.addElement(i);
         }
         lineSpace.setModel(defaultComboBoxModel4);
         lineSpace.setToolTipText("");
@@ -133,9 +130,9 @@ public class SettingUi {
         button2 = new JButton();
         button2.setText("...");
         mainPanel.add(button2, cc.xy(5, 3, CellConstraints.CENTER, CellConstraints.CENTER));
-        Label3 = new JLabel();
-        Label3.setText("自动翻页(秒):");
-        mainPanel.add(Label3, cc.xy(3, 7));
+        label3 = new JLabel();
+        label3.setText("自动翻页(秒):");
+        mainPanel.add(label3, cc.xy(3, 7));
         fontSize = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         defaultComboBoxModel1.addElement("11");

@@ -107,7 +107,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
     }
 
     public String getBefore() {
-        return StringUtils.isEmpty(before) ? "Alt + ←" : this.before;
+        return StringUtils.isEmpty(before) ? "Shift + ←" : this.before;
     }
 
     public void setBefore(String before) {
@@ -115,7 +115,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
     }
 
     public String getNext() {
-        return StringUtils.isEmpty(next) ? "Alt + →" : this.next;
+        return StringUtils.isEmpty(next) ? "Shift + →" : this.next;
     }
 
     public void setNext(String next) {

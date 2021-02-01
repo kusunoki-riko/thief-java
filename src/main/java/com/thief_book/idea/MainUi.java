@@ -292,7 +292,7 @@ public class MainUi implements ToolWindowFactory {
             }
         });
         afterB.registerKeyboardAction(afterB.getActionListeners()[0]
-                , KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.CTRL_DOWN_MASK)
+                , KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK)
                 , JComponent.WHEN_IN_FOCUSED_WINDOW);
         return afterB;
     }
@@ -321,7 +321,7 @@ public class MainUi implements ToolWindowFactory {
 
         });
         nextB.registerKeyboardAction(nextB.getActionListeners()[0]
-                , KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.CTRL_DOWN_MASK)
+                , KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK)
                 , JComponent.WHEN_IN_FOCUSED_WINDOW);
         return nextB;
     }
@@ -332,7 +332,7 @@ public class MainUi implements ToolWindowFactory {
     private JButton initBossButton(JButton[] buttons) {
         //老板键
         JButton bossB = new JButton(" ");
-        bossB.setPreferredSize(new Dimension(5,5));
+        bossB.setPreferredSize(new Dimension(12,12));
         bossB.setContentAreaFilled(false);
         bossB.setBorderPainted(false);
         bossB.addActionListener(e -> {
