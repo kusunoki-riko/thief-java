@@ -3,8 +3,8 @@ package com.thief_book.idea;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @description:
@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
  * @create: 2019-12-29 10:47
  **/
 public class RemoveBlank {
-    final static private Pattern PATTERN = Pattern.compile("[\\u4e00-\\u9fa5\\s\\w]+$");
 
     /**
      * 删除txt文档空白行
@@ -43,20 +42,16 @@ public class RemoveBlank {
             OutputStreamWriter outStream = new OutputStreamWriter(new FileOutputStream(file1), "gbk");
             BufferedWriter writer = new BufferedWriter(outStream);
             //以行读出文档内容至结束
-            StringBuilder stringBuilder = new StringBuilder();
             String oldLine;
             int i = 0;
             while ((oldLine = reader.readLine()) != null) {
                 //判断是否是空行
                 if (StringUtils.isNotBlank(oldLine)) {
-                    stringBuilder.append(oldLine);
-                    Matcher matcher = PATTERN.matcher(oldLine);
-                    if (!matcher.find()) {
+                    for (String line : split(oldLine)) {
                         //可在文档中标出行号
                         writer.write("[" + ++i + "]");
                         //将非空白行写入新文档
-                        writer.write(stringBuilder.toString() + "\r\n");
-                        stringBuilder = new StringBuilder();
+                        writer.write(line + "\r\n");
                     }
                 }
             }
@@ -67,6 +62,42 @@ public class RemoveBlank {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static List<String> split(String line) {
+        List<String> lines = new LinkedList<>();
+        split(line, lines);
+        return lines;
+    }
+
+    private static void split(String line, List<String> lines) {
+        int maxLength = 120;
+        int minLength = 40;
+        if (line.length() < maxLength) {
+            lines.add(line);
+            return;
+        }
+        int i = StringUtils.lastIndexOfAny(StringUtils.substring(line, 0, 120),
+                ".",
+                "!",
+                "?",
+                "\"",
+                "~",
+                "]",
+                "…",
+                "}",
+                "。",
+                "』",
+                "！",
+                "】",
+                "？",
+                "”");
+        if (i < minLength) {
+            lines.add(line);
+            return;
+        }
+        lines.add(StringUtils.substring(line, 0, i + 1));
+        split(StringUtils.substring(line, i + 1), lines);
     }
 
 }
