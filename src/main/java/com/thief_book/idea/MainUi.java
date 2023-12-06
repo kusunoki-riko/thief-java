@@ -139,7 +139,7 @@ public class MainUi implements ToolWindowFactory {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setFont(new Font(type, Font.PLAIN, Integer.parseInt(size)));
-        textArea.setBorder(JBUI.Borders.empty( 10,30));
+        textArea.setBorder(JBUI.Borders.empty(10, 30));
         return textArea;
     }
 
@@ -167,7 +167,7 @@ public class MainUi implements ToolWindowFactory {
         JButton down = initDownButton();
         panelRight.add(down, BorderLayout.EAST);
         //老板键
-        JButton boss = initBossButton(new JButton[] {fresh, up, down});
+        JButton boss = initBossButton(new JButton[]{fresh, up, down});
         panelRight.add(boss, BorderLayout.SOUTH);
         return panelRight;
     }
@@ -179,8 +179,8 @@ public class MainUi implements ToolWindowFactory {
         JTextField current = new JTextField("current line:");
         current.setPreferredSize(new Dimension(50, 30));
         current.setOpaque(false);
-        current.setBorder(JBUI.Borders.empty(0));
-        current.setText(currentPage / lineCount + "");
+        current.setBorder(JBUI.Borders.empty());
+        current.setText(String.valueOf(currentPage / lineCount));
         current.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -332,7 +332,7 @@ public class MainUi implements ToolWindowFactory {
     private JButton initBossButton(JButton[] buttons) {
         //老板键
         JButton bossB = new JButton(" ");
-        bossB.setPreferredSize(new Dimension(12,12));
+        bossB.setPreferredSize(new Dimension(12, 12));
         bossB.setContentAreaFilled(false);
         bossB.setBorderPainted(false);
         bossB.addActionListener(e -> {

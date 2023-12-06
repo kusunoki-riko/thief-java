@@ -12,7 +12,6 @@ import javax.swing.*;
 
 public class Setting implements SearchableConfigurable {
 
-
     private SettingUi settingUi;
 
     private PersistentState persistentState = PersistentState.getInstance();

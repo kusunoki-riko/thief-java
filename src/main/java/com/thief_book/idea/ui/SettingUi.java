@@ -1,14 +1,13 @@
 package com.thief_book.idea.ui;
 
-import com.intellij.openapi.vcs.history.VcsRevisionNumber;
+
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.thief_book.idea.PersistentState;
 import com.thief_book.idea.util.SettingUtil;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
 public class SettingUi {
@@ -37,7 +36,7 @@ public class SettingUi {
     public JTextField bookPathText;
     public JLabel l;
     public JLabel fontSizeLabel;
-	public JLabel label6;
+    public JLabel label6;
     public JComboBox<Integer> lineCount;
     public JComboBox<Integer> lineSpace;
     public JLabel label7;
@@ -47,13 +46,18 @@ public class SettingUi {
         button2.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            File downloadDir = new File(System.getProperty("user.home") + "\\Downloads");
+            if (downloadDir.exists()) {
+                fileChooser.setCurrentDirectory(downloadDir);
+            }
+            fileChooser.setFileFilter(new FileNameExtensionFilter("text", "txt"));
             fileChooser.showOpenDialog(mainPanel);
             File file = fileChooser.getSelectedFile();
-            bookPathText.setText( file.getPath());
+            bookPathText.setText(file.getPath());
         });
         final DefaultComboBoxModel<Integer> defaultComboBoxModel1 = new DefaultComboBoxModel<>();
 
-        for (int i = 11; i < 25; i ++) {
+        for (int i = 11; i < 25; i++) {
             defaultComboBoxModel1.addElement(i);
         }
 
@@ -67,20 +71,19 @@ public class SettingUi {
         fontType.setToolTipText("");
 
         final DefaultComboBoxModel<Integer> defaultComboBoxModel3 = new DefaultComboBoxModel<>();
-        for (int i = 1; i < 11; i ++) {
+        for (int i = 1; i < 11; i++) {
             defaultComboBoxModel3.addElement(i);
         }
         lineCount.setModel(defaultComboBoxModel3);
         lineCount.setToolTipText("");
 
         final DefaultComboBoxModel<Integer> defaultComboBoxModel4 = new DefaultComboBoxModel<>();
-        for (int i = 0; i < 3; i ++) {
+        for (int i = 0; i < 3; i++) {
             defaultComboBoxModel4.addElement(i);
         }
         lineSpace.setModel(defaultComboBoxModel4);
         lineSpace.setToolTipText("");
     }
-
 
 
     public void innit(PersistentState persistentState) {
