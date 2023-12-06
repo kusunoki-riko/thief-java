@@ -40,7 +40,7 @@ public class RemoveBlank {
             //构造一个字符流的缓存器，存放在控制台输入的字节转换后成的字符
             BufferedReader reader = new BufferedReader(stream);
             //写入数据流方式
-            OutputStreamWriter outStream = new OutputStreamWriter(Files.newOutputStream(file1.toPath()), "utf-8");
+            OutputStreamWriter outStream = new OutputStreamWriter(Files.newOutputStream(file1.toPath()), "gbk");
             BufferedWriter writer = new BufferedWriter(outStream);
             //以行读出文档内容至结束
             String oldLine;
