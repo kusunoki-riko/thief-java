@@ -33,7 +33,7 @@ public class MainUi implements ToolWindowFactory {
      * 缓存文件页数所对应seek的间隔
      * 该值越小，跳页时间越短，但对应的内存会增大
      **/
-    private int cacheInterval = 200;
+    private final int cacheInterval = 200;
 
     /**
      * 读取文件路径
@@ -73,7 +73,7 @@ public class MainUi implements ToolWindowFactory {
     /**
      * 显示总页数
      **/
-    private JLabel total = new JLabel();
+    private final JLabel total = new JLabel();
 
     /**
      * 读取文件的指针
@@ -107,7 +107,6 @@ public class MainUi implements ToolWindowFactory {
             ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
             Content content = contentFactory.createContent(panel, "Control", false);
             toolWindow.getContentManager().addContent(content);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -331,7 +330,7 @@ public class MainUi implements ToolWindowFactory {
      **/
     private JButton initBossButton(JButton[] buttons) {
         //老板键
-        JButton bossB = new JButton(" ");
+        JButton bossB = new JButton("x");
         bossB.setPreferredSize(new Dimension(12, 12));
         bossB.setContentAreaFilled(false);
         bossB.setBorderPainted(false);
@@ -364,15 +363,13 @@ public class MainUi implements ToolWindowFactory {
      * 向下读取文件
      **/
     private String readBook() throws IOException {
-        RandomAccessFile ra = null;
         StringBuilder str = new StringBuilder();
         StringBuilder nStr = new StringBuilder();
-        try {
-            ra = new RandomAccessFile(bookFile, "r");
+        for (int j = 0; j < lineSpace + 1; j++) {
+            nStr.append("\n");
+        }
+        try (RandomAccessFile ra = new RandomAccessFile(bookFile, "r")) {
             ra.seek(seek);
-            for (int j = 0; j < lineSpace + 1; j++) {
-                nStr.append("\n");
-            }
             String temp;
             for (int i = 0; i < lineCount && (temp = ra.readLine()) != null; i++) {
                 str.append(new String(temp.getBytes(StandardCharsets.ISO_8859_1), "gbk")).append(nStr);
@@ -381,16 +378,9 @@ public class MainUi implements ToolWindowFactory {
             //实例化当前行数
             persistentState.setCurrentLine(String.valueOf(currentPage));
             seek = ra.getFilePointer();
-            if (currentPage % cacheInterval == 0) {
-                seekDictionary.put(currentPage, seek);
-            }
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
-        } finally {
-            if (ra != null) {
-                ra.close();
-            }
         }
         return str.toString();
     }
@@ -420,32 +410,22 @@ public class MainUi implements ToolWindowFactory {
      * 找到当前指针应在位置
      **/
     private void countSeek() throws IOException {
-
-        RandomAccessFile ra = null;
-
-        try {
-            if (seekDictionary.containsKey(currentPage)) {
-                this.seek = seekDictionary.get(currentPage);
-            } else {
-                ra = new RandomAccessFile(bookFile, "r");
-                int line = 0;
-                for (int i = 0; cacheInterval * i < currentPage; i++) {
-                    line = cacheInterval * i;
-                    ra.seek(seekDictionary.get(line));
-                }
-                while (ra.readLine() != null) {
-                    line++;
-                    if (line == currentPage) {
-                        this.seek = ra.getFilePointer();
-                        break;
-                    }
-                }
+        if (seekDictionary.containsKey(currentPage)) {
+            this.seek = seekDictionary.get(currentPage);
+            return;
+        }
+        try (RandomAccessFile ra = new RandomAccessFile(bookFile, "r")) {
+            int line = 0;
+            for (int i = 0; cacheInterval * i < currentPage; i++) {
+                line = cacheInterval * i;
+                ra.seek(seekDictionary.get(line));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (ra != null) {
-                ra.close();
+            while (ra.readLine() != null) {
+                line++;
+                if (line == currentPage) {
+                    this.seek = ra.getFilePointer();
+                    break;
+                }
             }
         }
     }
