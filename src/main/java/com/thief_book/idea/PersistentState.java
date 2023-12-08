@@ -131,7 +131,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
     }
 
     public Integer getFontSize() {
-        return fontSize;
+        return fontSize != null ? fontSize : 14;
     }
 
     public void setFontSize(Integer fontSize) {
@@ -139,7 +139,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
     }
 
     public Long getCurrentLine() {
-        return currentLine;
+        return currentLine != null ? currentLine : 1;
     }
 
     public void setCurrentLine(Long currentLine) {
@@ -147,7 +147,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
     }
 
     public Integer getLineCount() {
-        return lineCount;
+        return lineCount != null ? lineCount : 1;
     }
 
     public void setLineCount(Integer lineCount) {
@@ -155,7 +155,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
     }
 
     public Integer getLineSpace() {
-        return lineSpace;
+        return lineSpace != null ? lineSpace : 0;
     }
 
     public void setLineSpace(Integer lineSpace) {

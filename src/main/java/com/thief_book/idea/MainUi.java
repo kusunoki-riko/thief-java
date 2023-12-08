@@ -234,7 +234,7 @@ public class MainUi implements ToolWindowFactory {
         refresh.setBorderPainted(false);
         refresh.addActionListener(e -> {
             try {
-                persistentState = PersistentState.getInstanceForce();
+                persistentState = PersistentState.getInstance();
                 if (StringUtils.isEmpty(persistentState.getBookPathText()) || !persistentState.getBookPathText().equals(bookFile)) {
                     bookFile = persistentState.getBookPathText();
                     currentPage = 0;
@@ -247,6 +247,9 @@ public class MainUi implements ToolWindowFactory {
                     totalLine = countLine();
                     countSeek();
                 } else {
+                    if (seekDictionary.size() <= 5 || totalLine == 0) {
+                        totalLine = countLine();
+                    }
                     // 初始化当前行数
                     if (persistentState.getCurrentLine() != null) {
                         currentPage = persistentState.getCurrentLine();
@@ -259,10 +262,6 @@ public class MainUi implements ToolWindowFactory {
                         if (currentPage > totalLine) {
                             currentPage = totalLine - 1;
                         }
-                        countSeek();
-                    }
-                    if (seekDictionary.size() <= 5 || totalLine == 0) {
-                        totalLine = countLine();
                         countSeek();
                     }
                 }
