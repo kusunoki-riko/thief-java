@@ -17,7 +17,7 @@ public class SettingUi {
     public JLabel label1;
     public JButton button2;
     public JLabel label3;
-    public JComboBox<String> fontSize;
+    public JComboBox<Integer> fontSize;
     public JComboBox<String> fontType;
     public JLabel label5;
     public JLabel label4;
@@ -27,8 +27,8 @@ public class SettingUi {
     public JLabel l;
     public JLabel fontSizeLabel;
     public JLabel label6;
-    public JComboBox<String> lineCount;
-    public JComboBox<String> lineSpace;
+    public JComboBox<Integer> lineCount;
+    public JComboBox<Integer> lineSpace;
     public JLabel label7;
 
 
@@ -45,10 +45,10 @@ public class SettingUi {
             File file = fileChooser.getSelectedFile();
             bookPathText.setText(file.getPath());
         });
-        final DefaultComboBoxModel<String> defaultComboBoxModel1 = new DefaultComboBoxModel<>();
+        final DefaultComboBoxModel<Integer> defaultComboBoxModel1 = new DefaultComboBoxModel<>();
 
         for (int i = 11; i < 25; i++) {
-            defaultComboBoxModel1.addElement(String.valueOf(i));
+            defaultComboBoxModel1.addElement(i);
         }
 
         fontSize.setModel(defaultComboBoxModel1);
@@ -60,16 +60,16 @@ public class SettingUi {
         fontType.setModel(defaultComboBoxModel2);
         fontType.setToolTipText("");
 
-        final DefaultComboBoxModel<String> defaultComboBoxModel3 = new DefaultComboBoxModel<>();
+        final DefaultComboBoxModel<Integer> defaultComboBoxModel3 = new DefaultComboBoxModel<>();
         for (int i = 1; i < 11; i++) {
-            defaultComboBoxModel3.addElement(String.valueOf(i));
+            defaultComboBoxModel3.addElement(i);
         }
         lineCount.setModel(defaultComboBoxModel3);
         lineCount.setToolTipText("");
 
-        final DefaultComboBoxModel<String> defaultComboBoxModel4 = new DefaultComboBoxModel<>();
+        final DefaultComboBoxModel<Integer> defaultComboBoxModel4 = new DefaultComboBoxModel<>();
         for (int i = 0; i < 3; i++) {
-            defaultComboBoxModel4.addElement(String.valueOf(i));
+            defaultComboBoxModel4.addElement(i);
         }
         lineSpace.setModel(defaultComboBoxModel4);
         lineSpace.setToolTipText("");

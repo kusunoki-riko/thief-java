@@ -65,11 +65,11 @@ public class Setting implements SearchableConfigurable {
     @Override
     public boolean isModified() {
         return !StringUtils.equals(persistentState.getBookPathText(), settingUi.bookPathText.getText())
-                || !StringUtils.equals(persistentState.getFontSize(), settingUi.fontSize.getSelectedItem().toString())
+                || persistentState.getFontSize() != settingUi.fontSize.getSelectedItem()
                 || !StringUtils.equals(persistentState.getBefore(), settingUi.before.getText())
                 || !StringUtils.equals(persistentState.getNext(), settingUi.next.getText())
-                || !StringUtils.equals(persistentState.getLineCount(), settingUi.lineCount.getSelectedItem().toString())
-                || !StringUtils.equals(persistentState.getLineSpace(), settingUi.lineSpace.getSelectedItem().toString())
+                || persistentState.getLineCount() != settingUi.lineCount.getSelectedItem()
+                || persistentState.getLineSpace() != settingUi.lineSpace.getSelectedItem()
                 || !StringUtils.equals(persistentState.getFontType(), settingUi.fontType.getSelectedItem().toString());
 
     }
@@ -77,22 +77,23 @@ public class Setting implements SearchableConfigurable {
     @Override
     public void apply() {
         persistentState.setBookPathText(settingUi.bookPathText.getText());
-        persistentState.setFontSize(settingUi.fontSize.getSelectedItem().toString());
+        persistentState.setFontSize(Integer.valueOf(settingUi.fontSize.getSelectedItem().toString()));
         persistentState.setBefore(settingUi.before.getText());
         persistentState.setNext(settingUi.next.getText());
-        persistentState.setLineCount(settingUi.lineCount.getSelectedItem().toString());
+        persistentState.setLineCount(Integer.valueOf(settingUi.lineCount.getSelectedItem().toString()));
         persistentState.setFontType(settingUi.fontType.getSelectedItem().toString());
-        persistentState.setLineSpace(settingUi.lineSpace.getSelectedItem().toString());
-
+        persistentState.setLineSpace(Integer.valueOf(settingUi.lineSpace.getSelectedItem().toString()));
     }
 
     @Override
     public void reset() {
-//        settingUi.bookPathText.setText("");
-//        settingUi.showFlag.setSelected(false);
-//        settingUi.fontSize.setSelectedItem("5");
-//        settingUi.before.setText("");
-//        settingUi.next.setText("");
+        settingUi.bookPathText.setText(persistentState.getBookPathText());
+        settingUi.fontSize.setSelectedItem(persistentState.getFontSize());
+        settingUi.before.setText(persistentState.getBefore());
+        settingUi.next.setText(persistentState.getNext());
+        settingUi.fontType.setSelectedItem(persistentState);
+        settingUi.lineCount.setSelectedItem(persistentState.getLineCount());
+        settingUi.lineSpace.setSelectedItem(persistentState.getLineSpace());
     }
 
     @Override

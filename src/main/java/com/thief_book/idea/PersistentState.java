@@ -24,7 +24,7 @@ public class PersistentState implements PersistentStateComponent<Element> {
 
     private String showFlag;
 
-    private String fontSize;
+    private Integer fontSize;
 
     private String fontType;
 
@@ -32,11 +32,11 @@ public class PersistentState implements PersistentStateComponent<Element> {
 
     private String next;
 
-    private String currentLine;
+    private Long currentLine;
 
-    private String lineCount;
+    private Integer lineCount;
 
-    private String lineSpace;
+    private Integer lineSpace;
 
 
 
@@ -61,13 +61,13 @@ public class PersistentState implements PersistentStateComponent<Element> {
         Element element = new Element("PersistentState");
         element.setAttribute("bookPath", this.getBookPathText());
         element.setAttribute("showFlag", this.getShowFlag());
-        element.setAttribute("fontSize", this.getFontSize());
+        element.setAttribute("fontSize", this.getFontSize().toString());
         element.setAttribute("before", this.getBefore());
         element.setAttribute("next", this.getNext());
-        element.setAttribute("currentLine", this.getCurrentLine());
+        element.setAttribute("currentLine", this.getCurrentLine().toString());
         element.setAttribute("fontType", this.getFontType());
-        element.setAttribute("lineCount",this.getLineCount());
-        element.setAttribute("lineSpace",this.getLineSpace());
+        element.setAttribute("lineCount",this.getLineCount().toString());
+        element.setAttribute("lineSpace",this.getLineSpace().toString());
         return element;
     }
 
@@ -75,13 +75,13 @@ public class PersistentState implements PersistentStateComponent<Element> {
     public void loadState(@NotNull Element state) {
         this.setBookPathText(state.getAttributeValue("bookPath"));
         this.setShowFlag(state.getAttributeValue("showFlag"));
-        this.setFontSize(state.getAttributeValue("fontSize"));
+        this.setFontSize(Integer.valueOf(state.getAttributeValue("fontSize")));
         this.setBefore(state.getAttributeValue("before"));
         this.setNext(state.getAttributeValue("next"));
-        this.setCurrentLine(state.getAttributeValue("currentLine"));
+        this.setCurrentLine(Long.valueOf(state.getAttributeValue("currentLine")));
         this.setFontType(state.getAttributeValue("fontType"));
-        this.setLineCount(state.getAttributeValue("lineCount"));
-        this.setLineSpace(state.getAttributeValue("lineSpace"));
+        this.setLineCount(Integer.valueOf(state.getAttributeValue("lineCount")));
+        this.setLineSpace(Integer.valueOf(state.getAttributeValue("lineSpace")));
 
     }
 
@@ -122,22 +122,6 @@ public class PersistentState implements PersistentStateComponent<Element> {
         this.next = next;
     }
 
-    public String getCurrentLine() {
-        return StringUtils.isEmpty(currentLine) ? "0" : this.currentLine;
-    }
-
-    public void setCurrentLine(String currentLine) {
-        this.currentLine = currentLine;
-    }
-
-    public String getFontSize() {
-        return StringUtils.isEmpty(fontSize) ? "14" : this.fontSize;
-    }
-
-    public void setFontSize(String fontSize) {
-        this.fontSize = fontSize;
-    }
-
     public String getFontType() {
         return StringUtils.isEmpty(fontType) ? "Microsoft JhengHei" : this.fontType;
     }
@@ -145,18 +129,36 @@ public class PersistentState implements PersistentStateComponent<Element> {
     public void setFontType(String fontType) {
         this.fontType = fontType;
     }
-    public String getLineCount() {
-        return this.lineCount =StringUtils.isEmpty(lineCount) ? "1" : lineCount;
+
+    public Integer getFontSize() {
+        return fontSize;
     }
-    public void setLineCount(String lineCount) {
+
+    public void setFontSize(Integer fontSize) {
+        this.fontSize = fontSize;
+    }
+
+    public Long getCurrentLine() {
+        return currentLine;
+    }
+
+    public void setCurrentLine(Long currentLine) {
+        this.currentLine = currentLine;
+    }
+
+    public Integer getLineCount() {
+        return lineCount;
+    }
+
+    public void setLineCount(Integer lineCount) {
         this.lineCount = lineCount;
     }
 
-    public String getLineSpace() {
-        return this.lineSpace=StringUtils.isEmpty(lineSpace) ? "0" : lineSpace;
+    public Integer getLineSpace() {
+        return lineSpace;
     }
 
-    public void setLineSpace(String lineSpace) {
+    public void setLineSpace(Integer lineSpace) {
         this.lineSpace = lineSpace;
     }
 }

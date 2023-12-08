@@ -49,10 +49,11 @@ public class RemoveBlank {
                 //判断是否是空行
                 if (StringUtils.isNotBlank(oldLine)) {
                     for (String line : split(oldLine)) {
+                        StringUtils.removeStart(line, "　　");
                         //可在文档中标出行号
-                        writer.write("[" + ++i + "]");
+                        writer.write("[" + ++i + "] ");
                         //将非空白行写入新文档
-                        writer.write(line + "\r\n");
+                        writer.write(StringUtils.removeStart(line, "　　") + "\r\n");
                     }
                 }
             }
@@ -72,7 +73,7 @@ public class RemoveBlank {
     }
 
     private static void split(String line, List<String> lines) {
-        int maxLength = 120;
+        int maxLength = 100;
         int minLength = 40;
         if (line.length() < maxLength) {
             lines.add(line);
@@ -93,7 +94,7 @@ public class RemoveBlank {
                 "】",
                 "？",
                 "”");
-        if (i < minLength) {
+        if (i < minLength || line.length() - i < minLength) {
             lines.add(line);
             return;
         }
