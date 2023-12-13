@@ -16,7 +16,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,7 +26,7 @@ public class MainUi implements ToolWindowFactory {
     /**
      * 缓存文件页数所对应的seek，避免搜索指针的时候每次从头读取文件
      **/
-    private final Map<Integer, Long> seekDictionary = new LinkedHashMap<>();
+    private final Map<Long, Long> seekDictionary = new LinkedHashMap<>();
 
     /**
      * 缓存文件页数所对应seek的间隔
@@ -83,7 +82,7 @@ public class MainUi implements ToolWindowFactory {
     /**
      * 当前文件总页数
      **/
-    private int totalLine = 0;
+    private long totalLine = 0;
 
     /**
      * 当前正在阅读页数
@@ -204,7 +203,7 @@ public class MainUi implements ToolWindowFactory {
                             seek = 0;
                             currentPage = 0;
                         } else {
-                            currentPage = (i - 1) * lineCount;
+                            currentPage = (long) (i - 1) * lineCount;
                             if (currentPage > totalLine) {
                                 currentPage = totalLine - 1;
                             }
@@ -311,7 +310,7 @@ public class MainUi implements ToolWindowFactory {
             }
         });
         afterB.registerKeyboardAction(afterB.getActionListeners()[0]
-                , KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK)
+                , KeyStroke.getKeyStroke('1')
                 , JComponent.WHEN_IN_FOCUSED_WINDOW);
         return afterB;
     }
@@ -338,7 +337,7 @@ public class MainUi implements ToolWindowFactory {
             }
         });
         nextB.registerKeyboardAction(nextB.getActionListeners()[0]
-                , KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK)
+                , KeyStroke.getKeyStroke('2')
                 , JComponent.WHEN_IN_FOCUSED_WINDOW);
         return nextB;
     }
@@ -372,7 +371,7 @@ public class MainUi implements ToolWindowFactory {
                 hide = true;
             }
         });
-        bossB.registerKeyboardAction(bossB.getActionListeners()[0], KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        bossB.registerKeyboardAction(bossB.getActionListeners()[0], KeyStroke.getKeyStroke('5'), JComponent.WHEN_IN_FOCUSED_WINDOW);
         bossB.registerKeyboardAction(bossB.getActionListeners()[0], KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.SHIFT_DOWN_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW);
         return bossB;
     }
@@ -390,7 +389,7 @@ public class MainUi implements ToolWindowFactory {
             ra.seek(seek);
             String temp;
             for (int i = 0; i < lineCount && (temp = ra.readLine()) != null; i++) {
-                str.append(new String(temp.getBytes(StandardCharsets.ISO_8859_1), "gbk")).append(nStr);
+                str.append(temp).append(nStr);
                 currentPage++;
             }
             //实例化当前行数
@@ -406,10 +405,10 @@ public class MainUi implements ToolWindowFactory {
     /**
      * 读取文件总行数
      **/
-    private int countLine() {
+    private long countLine() {
         try (RandomAccessFile ra = new RandomAccessFile(bookFile, "r")) {
-            int i = 0;
-            seekDictionary.put(0, ra.getFilePointer());
+            long i = 0;
+            seekDictionary.put(0L, ra.getFilePointer());
             while (ra.readLine() != null) {
                 i++;
                 if (i % cacheInterval == 0) {
@@ -433,17 +432,17 @@ public class MainUi implements ToolWindowFactory {
             return;
         }
         try (RandomAccessFile ra = new RandomAccessFile(bookFile, "r")) {
-            int line = 0;
-            for (int i = 0; cacheInterval * i < currentPage; i++) {
-                line = cacheInterval * i;
+            long line = 0;
+            for (int i = 0; (long) cacheInterval * i < currentPage; i++) {
+                line = (long) cacheInterval * i;
                 ra.seek(seekDictionary.get(line));
             }
             while (ra.readLine() != null) {
-                line++;
                 if (line == currentPage) {
                     this.seek = ra.getFilePointer();
                     break;
                 }
+                line++;
             }
         }
     }
