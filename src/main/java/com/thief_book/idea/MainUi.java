@@ -16,6 +16,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -389,7 +390,7 @@ public class MainUi implements ToolWindowFactory {
             ra.seek(seek);
             String temp;
             for (int i = 0; i < lineCount && (temp = ra.readLine()) != null; i++) {
-                str.append(temp).append(nStr);
+                str.append(new String(temp.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8)).append(nStr);
                 currentPage++;
             }
             //实例化当前行数
