@@ -311,7 +311,7 @@ public class MainUi implements ToolWindowFactory {
             }
         });
         afterB.registerKeyboardAction(afterB.getActionListeners()[0]
-                , KeyStroke.getKeyStroke('1')
+                , KeyStroke.getKeyStroke(persistentState.getBefore())
                 , JComponent.WHEN_IN_FOCUSED_WINDOW);
         return afterB;
     }
@@ -338,7 +338,7 @@ public class MainUi implements ToolWindowFactory {
             }
         });
         nextB.registerKeyboardAction(nextB.getActionListeners()[0]
-                , KeyStroke.getKeyStroke('2')
+                , KeyStroke.getKeyStroke(persistentState.getNext())
                 , JComponent.WHEN_IN_FOCUSED_WINDOW);
         return nextB;
     }

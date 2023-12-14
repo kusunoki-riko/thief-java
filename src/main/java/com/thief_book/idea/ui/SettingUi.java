@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.thief_book.idea.PersistentState;
 import com.thief_book.idea.util.SettingUtil;
+import com.thief_book.idea.verify.InputLengthVerify;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -79,20 +80,19 @@ public class SettingUi {
     public void innit(PersistentState persistentState) {
         if (fontSize.getSelectedItem() == null) {
             fontSize.setSelectedItem(14);
+        } else {
+            fontSize.setSelectedItem(persistentState.getFontSize());
         }
         bookPathText.setText(persistentState.getBookPathText());
-        fontSize.setSelectedItem(persistentState.getFontSize());
         fontType.setSelectedItem(persistentState.getFontType());
-        before.setText(persistentState.getBefore());
-        next.setText(persistentState.getNext());
+        before.setText(persistentState.getBefore().toString());
+        next.setText(persistentState.getNext().toString());
         lineCount.setSelectedItem(persistentState.getLineCount());
         lineSpace.setSelectedItem(persistentState.getLineSpace());
 
-        before.setEditable(false);
-        next.setEditable(false);
         bookPathText.setEditable(false);
-
-
+        before.addKeyListener(new InputLengthVerify(1, before));
+        next.addKeyListener(new InputLengthVerify(1, next));
     }
 
     {

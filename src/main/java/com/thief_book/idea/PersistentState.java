@@ -28,9 +28,9 @@ public class PersistentState implements PersistentStateComponent<Element> {
 
     private String fontType;
 
-    private String before;
+    private Character before;
 
-    private String next;
+    private Character next;
 
     private Long currentLine;
 
@@ -62,8 +62,8 @@ public class PersistentState implements PersistentStateComponent<Element> {
         element.setAttribute("bookPath", this.getBookPathText());
         element.setAttribute("showFlag", this.getShowFlag());
         element.setAttribute("fontSize", this.getFontSize().toString());
-        element.setAttribute("before", this.getBefore());
-        element.setAttribute("next", this.getNext());
+        element.setAttribute("before", this.getBefore().toString());
+        element.setAttribute("next", this.getNext().toString());
         element.setAttribute("currentLine", this.getCurrentLine().toString());
         element.setAttribute("fontType", this.getFontType());
         element.setAttribute("lineCount",this.getLineCount().toString());
@@ -76,8 +76,8 @@ public class PersistentState implements PersistentStateComponent<Element> {
         this.setBookPathText(state.getAttributeValue("bookPath"));
         this.setShowFlag(state.getAttributeValue("showFlag"));
         this.setFontSize(Integer.valueOf(state.getAttributeValue("fontSize")));
-        this.setBefore(state.getAttributeValue("before"));
-        this.setNext(state.getAttributeValue("next"));
+        this.setBefore(state.getAttributeValue("before").charAt(0));
+        this.setNext(state.getAttributeValue("next").charAt(0));
         this.setCurrentLine(Long.valueOf(state.getAttributeValue("currentLine")));
         this.setFontType(state.getAttributeValue("fontType"));
         this.setLineCount(Integer.valueOf(state.getAttributeValue("lineCount")));
@@ -106,19 +106,19 @@ public class PersistentState implements PersistentStateComponent<Element> {
         this.showFlag = showFlag;
     }
 
-    public String getBefore() {
-        return StringUtils.isEmpty(before) ? "Shift + ←" : this.before;
+    public Character getBefore() {
+        return before == null ? '1' : this.before;
     }
 
-    public void setBefore(String before) {
+    public void setBefore(Character before) {
         this.before = before;
     }
 
-    public String getNext() {
-        return StringUtils.isEmpty(next) ? "Shift + →" : this.next;
+    public Character getNext() {
+        return next == null ? '2' : this.next;
     }
 
-    public void setNext(String next) {
+    public void setNext(Character next) {
         this.next = next;
     }
 

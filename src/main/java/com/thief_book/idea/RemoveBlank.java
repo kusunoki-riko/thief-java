@@ -3,6 +3,7 @@ package com.thief_book.idea;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
@@ -25,8 +26,8 @@ public class RemoveBlank {
     public static void main(String[] args) {
 
         //用命令行参数直接写入待处理文件
-        File file = new File("C:\\Users\\FO\\Downloads\\《隋唐演义（白话版）》.txt");
-        File file1 = new File("C:\\Users\\FO\\Downloads\\styy.txt");
+        File file = new File("C:\\Users\\FO\\Downloads\\药娘的天空(妮可全文手打).TXT");
+        File file1 = new File("C:\\Users\\FO\\Downloads\\yndtk.txt");
 
 
         //判断输入的文档是否存在，不存在则提示退出
@@ -38,7 +39,7 @@ public class RemoveBlank {
         try {
             //读出文档数据流方式
             //读入数据流方式设为‘UTF-8’，避免乱码
-            InputStreamReader stream = new InputStreamReader(Files.newInputStream(file.toPath()), StandardCharsets.UTF_8);
+            InputStreamReader stream = new InputStreamReader(Files.newInputStream(file.toPath()), Charset.defaultCharset());
             //构造一个字符流的缓存器，存放在控制台输入的字节转换后成的字符
             BufferedReader reader = new BufferedReader(stream);
             //写入数据流方式
@@ -49,21 +50,23 @@ public class RemoveBlank {
             int i = 0;
             while ((oldLine = reader.readLine()) != null) {
                 //判断是否是空行
-                if (StringUtils.isNotBlank(oldLine)) {
-                    for (String line : split(oldLine)) {
-                        StringUtils.removeStart(line, "　　");
-                        //可在文档中标出行号
-                        writer.write("[" + ++i + "] ");
-                        //将非空白行写入新文档
-                        writer.write(StringUtils.removeStart(line.trim(), "　　") + "\r\n");
-                    }
+                if (StringUtils.isBlank(oldLine)) {
+                    continue;
+                }
+                for (String line : split(oldLine)) {
+                    StringUtils.removeStart(line, "　　");
+                    //可在文档中标出行号
+                    writer.write("[" + ++i + "] ");
+                    //将非空白行写入新文档
+                    writer.write(StringUtils.removeStart(line.trim(), "　　") + "\r\n");
                 }
             }
             //关闭数据流
             writer.close();
             reader.close();
             System.out.println("修改完成！");
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
     }
@@ -98,7 +101,7 @@ public class RemoveBlank {
                 ";",
                 "；",
                 "”");
-        while (i != -1 && i < line.length() && characterList.contains(line.charAt(i))) {
+        while (i != -1 && i < line.length() - 1 && characterList.contains(line.charAt(i + 1))) {
             i += 1;
         }
         if (i < minLength || line.length() - i < 10) {
