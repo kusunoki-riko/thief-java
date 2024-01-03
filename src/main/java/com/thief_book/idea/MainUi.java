@@ -327,7 +327,7 @@ public class MainUi implements ToolWindowFactory {
         nextB.addActionListener(e -> {
             if (currentPage < totalLine) {
                 try {
-                    if (currentPage / lineCount <= 1) {
+                    if (currentPage <= lineCount) {
                         countSeek();
                     }
                     textArea.setText(readBook());
@@ -433,11 +433,8 @@ public class MainUi implements ToolWindowFactory {
             return;
         }
         try (RandomAccessFile ra = new RandomAccessFile(bookFile, "r")) {
-            long line = 0;
-            for (int i = 0; (long) cacheInterval * i < currentPage; i++) {
-                line = (long) cacheInterval * i;
-                ra.seek(seekDictionary.get(line));
-            }
+            long line = cacheInterval * (currentPage / cacheInterval);
+            ra.seek(seekDictionary.get(line));
             while (ra.readLine() != null) {
                 if (line == currentPage) {
                     this.seek = ra.getFilePointer();
@@ -447,5 +444,4 @@ public class MainUi implements ToolWindowFactory {
             }
         }
     }
-
 }

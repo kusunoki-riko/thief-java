@@ -1,4 +1,4 @@
-package com.thief_book.idea;
+package com.thief_book.idea.util;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,15 +36,12 @@ public class RemoveBlank {
             System.exit(0);
         }
         //输入的是TXT文档则继续往下执行
-        try {
-            //读出文档数据流方式
-            //读入数据流方式设为‘UTF-8’，避免乱码
-            InputStreamReader stream = new InputStreamReader(Files.newInputStream(file.toPath()), Charset.defaultCharset());
-            //构造一个字符流的缓存器，存放在控制台输入的字节转换后成的字符
-            BufferedReader reader = new BufferedReader(stream);
-            //写入数据流方式
-            OutputStreamWriter outStream = new OutputStreamWriter(Files.newOutputStream(file1.toPath()), StandardCharsets.UTF_8);
-            BufferedWriter writer = new BufferedWriter(outStream);
+        try (InputStreamReader stream = new InputStreamReader(Files.newInputStream(file.toPath()), Charset.defaultCharset());
+             //构造一个字符流的缓存器，存放在控制台输入的字节转换后成的字符
+             BufferedReader reader = new BufferedReader(stream);
+             //写入数据流方式
+             OutputStreamWriter outStream = new OutputStreamWriter(Files.newOutputStream(file1.toPath()), StandardCharsets.UTF_8);
+             BufferedWriter writer = new BufferedWriter(outStream)) {
             //以行读出文档内容至结束
             String oldLine;
             int i = 0;
@@ -61,12 +58,8 @@ public class RemoveBlank {
                     writer.write(StringUtils.removeStart(line.trim(), "　　") + "\r\n");
                 }
             }
-            //关闭数据流
-            writer.close();
-            reader.close();
             System.out.println("修改完成！");
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -77,15 +70,15 @@ public class RemoveBlank {
         return lines;
     }
 
-    private static void split(String line, List<String> lines) {
-        int maxLength = 100;
+
+    private static int findLast(String line, int maxLength) {
         int minLength = 40;
-        if (line.length() < maxLength) {
-            lines.add(line);
-            return;
+        if (line.length() < minLength) {
+            return -1;
         }
-        int i = StringUtils.lastIndexOfAny(StringUtils.substring(line, 0, 120),
-                ".",
+        int i = StringUtils.lastIndexOfAny(StringUtils.substring(line, 0, maxLength), ".",
+                " ",
+                "　",
                 "!",
                 "?",
                 "\"",
@@ -100,12 +93,29 @@ public class RemoveBlank {
                 "？",
                 ";",
                 "；",
-                "”");
+                "”"
+        );
+        if (i < minLength) {
+            if (maxLength + 50 < line.length()) {
+                return findLast(line, maxLength + 50);
+            }
+            return -1;
+        }
         while (i != -1 && i < line.length() - 1 && characterList.contains(line.charAt(i + 1))) {
             i += 1;
         }
-        if (i < minLength || line.length() - i < 10) {
-            lines.add(line);
+        if (line.length() - i < minLength) {
+            return -1;
+        }
+        return i;
+    }
+
+    private static void split(String line, List<String> lines) {
+        int i = findLast(line, 120);
+        if (i == -1) {
+            if (StringUtils.isNotBlank(line)) {
+                lines.add(line.replace(" ", ""));
+            }
             return;
         }
         lines.add(StringUtils.substring(line, 0, i + 1));
@@ -113,9 +123,11 @@ public class RemoveBlank {
     }
 
     final static List<Character> characterList = Arrays.asList('.',
+            ' ',
+            '　',
             '!',
             '?',
-            '\"',
+            '\'',
             '~',
             ']',
             '…',
@@ -130,3 +142,4 @@ public class RemoveBlank {
             '”');
 
 }
+
